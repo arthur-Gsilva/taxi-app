@@ -1,0 +1,1 @@
+export type Step = 'START' | 'CONFIRM' | 'FINISH'
