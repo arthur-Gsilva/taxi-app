@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model driver {
+  id          Int     @id
+  name        String
+  description String
+  vehicle     String
+  value       Float
+  minKm       Float
+  image       String
+  review      review?
+  ride        ride[]
+}
+
+model review {
+  id       Int    @id @default(autoincrement())
+  rating   Int
+  comment  String
+  driverId Int    @unique(map: "Review_driverId_key")
+  driver   driver @relation(fields: [driverId], references: [id], map: "Review_driverId_fkey")
+}
+
+model ride {
+  id          Int      @id @default(autoincrement())
+  customer_id Int
+  origin      String
+  destination String
+  distance    Int
+  duration    String
+  driverId    Int
+  createdAt   DateTime @default(now())
+  value       Float
+  driver      driver   @relation(fields: [driverId], references: [id], map: "Ride_driverId_fkey")
+
+  @@index([driverId], map: "Ride_driverId_fkey")
+}
